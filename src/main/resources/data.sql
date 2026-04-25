@@ -1,0 +1,166 @@
+-- =========================================
+-- SEED DE DATOS - XploreNow
+-- =========================================
+
+-- Destinos
+INSERT INTO destinos (nombre, pais) VALUES
+    ('Buenos Aires', 'Argentina'),
+    ('Bariloche', 'Argentina'),
+    ('Mendoza', 'Argentina'),
+    ('Cusco', 'Peru'),
+    ('Rio de Janeiro', 'Brasil');
+
+-- Categorias
+INSERT INTO categorias (codigo, nombre) VALUES
+    ('AVENTURA', 'Aventura'),
+    ('CULTURA', 'Cultura'),
+    ('GASTRONOMIA', 'Gastronomia'),
+    ('NATURALEZA', 'Naturaleza'),
+    ('RELAX', 'Relax'),
+    ('FREE_TOUR', 'Free Tour'),
+    ('VISITA_GUIADA', 'Visita Guiada'),
+    ('EXCURSION', 'Excursion');
+
+-- Actividades
+INSERT INTO actividades (
+    nombre, imagen_principal, destino_id, categoria_id,
+    duracion_minutos, precio, cupos_disponibles,
+    fecha_disponible_desde, fecha_disponible_hasta,
+    descripcion, que_incluye, punto_encuentro,
+    latitud, longitud,
+    guia_asignado, idioma, politica_cancelacion
+) VALUES
+    ('Free Tour por San Telmo',
+     'https://picsum.photos/seed/santelmo/600/400',
+     1, 6, 120, 0.00, 25,
+     '2026-01-01', '2026-12-31',
+     'Recorrido a pie por el barrio mas antiguo de Buenos Aires. Plaza Dorrego, Mercado de San Telmo, calles empedradas.',
+     'Guia profesional, recorrido completo. No incluye comidas.',
+     'Plaza de Mayo, frente al Cabildo',
+     -34.6083, -58.3712,
+     'Martin Gonzalez', 'Espanol', 'Cancelacion gratuita hasta 24hs antes.'),
+
+    ('Tour Gastronomico en Palermo',
+     'https://picsum.photos/seed/palermo/600/400',
+     1, 3, 180, 18500.00, 12,
+     '2026-01-01', '2026-12-31',
+     'Recorrido por 5 paradas gastronomicas: parrilla, empanadas, vinos argentinos, helado y dulce de leche.',
+     'Todas las degustaciones, copa de vino, postres.',
+     'Plaza Serrano, Palermo Soho',
+     -34.5882, -58.4350,
+     'Lucia Fernandez', 'Espanol/Ingles', 'Cancelacion 50% hasta 48hs antes.'),
+
+    ('Trekking Cerro Catedral',
+     'https://picsum.photos/seed/catedral/600/400',
+     2, 1, 480, 32000.00, 8,
+     '2026-03-01', '2026-11-30',
+     'Trekking de dia completo al Cerro Catedral con vistas panoramicas al Nahuel Huapi.',
+     'Equipo de seguridad, almuerzo, transporte ida y vuelta.',
+     'Centro Civico de Bariloche',
+     -41.1335, -71.3103,
+     'Pedro Rios', 'Espanol', 'Cancelacion gratuita hasta 72hs antes por clima.'),
+
+    ('Visita guiada Bodega Catena Zapata',
+     'https://picsum.photos/seed/bodega/600/400',
+     3, 7, 150, 22000.00, 20,
+     '2026-01-01', '2026-12-31',
+     'Recorrido por una de las bodegas mas premiadas del mundo. Cata incluida.',
+     'Tour completo, cata de 4 vinos, traslado desde Mendoza centro.',
+     'Hotel Park Hyatt, Mendoza',
+     -32.8895, -68.8458,
+     'Carla Esposito', 'Espanol/Ingles', 'Cancelacion 100% hasta 24hs antes.'),
+
+    ('Excursion Machu Picchu desde Cusco',
+     'https://picsum.photos/seed/machu/600/400',
+     4, 8, 720, 95000.00, 30,
+     '2026-01-01', '2026-12-31',
+     'Excursion de dia completo a Machu Picchu en tren. Incluye guia bilingue.',
+     'Tren ida y vuelta, entrada, almuerzo buffet, guia.',
+     'Plaza de Armas, Cusco',
+     -13.5163, -71.9786,
+     'Carlos Quispe', 'Espanol/Ingles', 'Cancelacion 50% hasta 7 dias antes.'),
+
+    ('Tour por Cristo Redentor',
+     'https://picsum.photos/seed/cristo/600/400',
+     5, 7, 240, 28000.00, 25,
+     '2026-01-01', '2026-12-31',
+     'Visita al Cristo Redentor en el cerro Corcovado. Vistas panoramicas de Rio.',
+     'Tren del Corcovado, entrada, guia.',
+     'Estacion Cosme Velho',
+     -22.9519, -43.2105,
+     'Beatriz Silva', 'Portugues/Espanol', 'Cancelacion 100% hasta 48hs antes.'),
+
+    ('Clase de Tango en La Boca',
+     'https://picsum.photos/seed/tango/600/400',
+     1, 2, 90, 12000.00, 15,
+     '2026-01-01', '2026-12-31',
+     'Clase introductoria de tango con bailarines profesionales. No se requiere experiencia.',
+     'Clase 90 min, copa de bienvenida.',
+     'Caminito, La Boca',
+     -34.6395, -58.3624,
+     'Ana Rodriguez', 'Espanol/Ingles', 'Cancelacion gratuita hasta 24hs antes.'),
+
+    ('Day Spa en Las Lenas',
+     'https://picsum.photos/seed/spa/600/400',
+     3, 5, 300, 45000.00, 6,
+     '2026-06-01', '2026-09-30',
+     'Dia completo de spa con masajes, sauna, piscina climatizada y vista a la montana.',
+     'Acceso completo al spa, almuerzo, una sesion de masaje.',
+     'Hotel Piscis, Las Lenas',
+     -35.1481, -70.0830,
+     'Sofia Mendoza', 'Espanol', 'Cancelacion 50% hasta 72hs antes.'),
+
+    ('Avistaje de ballenas Puerto Madryn',
+     'https://picsum.photos/seed/ballenas/600/400',
+     1, 4, 240, 38000.00, 18,
+     '2026-06-01', '2026-12-15',
+     'Excursion en barco para avistar ballenas francas australes.',
+     'Embarcacion, chaleco, guia naturalista, hidratacion.',
+     'Puerto Piramides',
+     -42.5750, -64.2778,
+     'Lucas Fernandez', 'Espanol/Ingles', 'Cancelacion gratuita por clima.'),
+
+    ('Free Tour Recoleta',
+     'https://picsum.photos/seed/recoleta/600/400',
+     1, 6, 90, 0.00, 30,
+     '2026-01-01', '2026-12-31',
+     'Recorrido por el cementerio de la Recoleta y los principales puntos del barrio.',
+     'Guia profesional. A la gorra.',
+     'Entrada del cementerio',
+     -34.5875, -58.3927,
+     'Diego Lopez', 'Espanol/Ingles', 'Cancelacion gratuita.'),
+
+    ('Cabalgata en los Andes',
+     'https://picsum.photos/seed/cabalgata/600/400',
+     3, 1, 360, 35000.00, 10,
+     '2026-09-01', '2026-04-30',
+     'Cabalgata por la cordillera con guia gaucho. Asado al regreso.',
+     'Caballo, equipamiento, asado completo, vino.',
+     'Estancia La Alejandra',
+     -33.0381, -68.8786,
+     'Roberto Aguero', 'Espanol', 'Cancelacion 100% hasta 48hs antes.'),
+
+    ('City tour panoramico Buenos Aires',
+     'https://picsum.photos/seed/citytour/600/400',
+     1, 7, 180, 15000.00, 40,
+     '2026-01-01', '2026-12-31',
+     'Recorrido por los barrios mas emblematicos: Plaza de Mayo, La Boca, San Telmo, Recoleta y Palermo.',
+     'Bus turistico, guia bilingue.',
+     'Obelisco, Av. 9 de Julio',
+     -34.6037, -58.3816,
+     'Mariana Torres', 'Espanol/Ingles/Portugues', 'Cancelacion gratuita hasta 24hs antes.');
+
+-- Fotos de las galerias (algunas actividades, no todas)
+INSERT INTO fotos_actividad (url, actividad_id) VALUES
+    ('https://picsum.photos/seed/santelmo1/800/600', 1),
+    ('https://picsum.photos/seed/santelmo2/800/600', 1),
+    ('https://picsum.photos/seed/santelmo3/800/600', 1),
+    ('https://picsum.photos/seed/palermo1/800/600', 2),
+    ('https://picsum.photos/seed/palermo2/800/600', 2),
+    ('https://picsum.photos/seed/catedral1/800/600', 3),
+    ('https://picsum.photos/seed/catedral2/800/600', 3),
+    ('https://picsum.photos/seed/bodega1/800/600', 4),
+    ('https://picsum.photos/seed/bodega2/800/600', 4),
+    ('https://picsum.photos/seed/machu1/800/600', 5),
+    ('https://picsum.photos/seed/machu2/800/600', 5),
+    ('https://picsum.photos/seed/machu3/800/600', 5);
