@@ -170,7 +170,7 @@ INSERT INTO fotos_actividad (url, actividad_id) VALUES
 -- Password de todos: password123  (hasheada con BCrypt)
 -- =========================================
 INSERT INTO usuarios (email, password_hash, nombre, telefono, foto_url, creado_en) VALUES
-    ('ana@xplorenow.com',   '$2a$10$VZsemoCC6/isNFPGfw4xbe2XWG2JTzt43vYSOLHr.ByA5DyDgHQkO', 'Ana Garcia',     '+541112345678', NULL, CURRENT_TIMESTAMP),
+    ('ana@xplorenow.com',   '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Ana Garcia',     '+541112345678', NULL, CURRENT_TIMESTAMP),
     ('juan@xplorenow.com',  '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Juan Perez',     '+541123456789', NULL, CURRENT_TIMESTAMP),
     ('maria@xplorenow.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Maria Rodriguez', '+541134567890', NULL, CURRENT_TIMESTAMP),
     ('pedro@xplorenow.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Pedro Lopez',    '+541145678901', NULL, CURRENT_TIMESTAMP),
@@ -183,3 +183,86 @@ INSERT INTO usuario_preferencias (usuario_id, categoria_id) VALUES (1, 1), (1, 4
 INSERT INTO usuario_preferencias (usuario_id, categoria_id) VALUES (2, 3), (2, 2);
 -- Maria: relax
 INSERT INTO usuario_preferencias (usuario_id, categoria_id) VALUES (3, 5);
+
+-- =========================================
+-- HORARIOS DISPONIBLES (Bloque B)
+-- Generamos varios horarios por actividad para los proximos meses
+-- =========================================
+
+-- Free Tour San Telmo (id=1): 3 horarios diarios para varios dias
+INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
+    (1, '2026-05-15', '10:00', 25),
+    (1, '2026-05-15', '15:00', 25),
+    (1, '2026-05-16', '10:00', 25),
+    (1, '2026-05-16', '15:00', 25),
+    (1, '2026-06-01', '10:00', 25),
+    (1, '2026-06-01', '15:00', 25);
+
+-- Tour Gastronomico Palermo (id=2): 1 horario por dia
+INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
+    (2, '2026-05-15', '19:00', 12),
+    (2, '2026-05-20', '19:00', 12),
+    (2, '2026-06-01', '19:00', 12);
+
+-- Trekking Cerro Catedral (id=3): solo manana temprano
+INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
+    (3, '2026-05-20', '08:00', 8),
+    (3, '2026-05-25', '08:00', 8),
+    (3, '2026-06-10', '08:00', 8);
+
+-- Visita Bodega Catena (id=4): manana y tarde
+INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
+    (4, '2026-05-15', '11:00', 20),
+    (4, '2026-05-15', '15:00', 20),
+    (4, '2026-05-22', '11:00', 20);
+
+-- Excursion Machu Picchu (id=5): un solo horario, muy temprano
+INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
+    (5, '2026-05-18', '05:00', 30),
+    (5, '2026-06-05', '05:00', 30);
+
+-- Tour Cristo Redentor (id=6)
+INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
+    (6, '2026-05-15', '09:00', 25),
+    (6, '2026-05-15', '14:00', 25);
+
+-- Clase Tango La Boca (id=7)
+INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
+    (7, '2026-05-15', '20:00', 15),
+    (7, '2026-05-22', '20:00', 15);
+
+-- =========================================
+-- HORARIOS YA PASADOS (para probar FINALIZADA)
+-- =========================================
+INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
+    (1, '2026-04-10', '10:00', 23),
+    (2, '2026-04-15', '19:00', 11);
+
+-- =========================================
+-- RESERVAS DE EJEMPLO (Bloque B)
+-- Buscamos los horarios por fecha+hora para no depender de IDs autoasignados.
+-- =========================================
+
+-- Ana (id=1): reserva CONFIRMADA futura en Free Tour San Telmo (2026-05-15 10:00)
+INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
+SELECT 1, 1, h.id, 2, 'CONFIRMADA', 'XPLR-A1B2C3D4', CURRENT_TIMESTAMP
+FROM horarios_disponibles h
+WHERE h.actividad_id = 1 AND h.fecha = '2026-05-15' AND h.hora = '10:00';
+
+-- Juan (id=2): reserva CANCELADA en Tour Gastronomico (2026-05-20 19:00)
+INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en, cancelada_en)
+SELECT 2, 2, h.id, 4, 'CANCELADA', 'XPLR-E5F6G7H8', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+FROM horarios_disponibles h
+WHERE h.actividad_id = 2 AND h.fecha = '2026-05-20' AND h.hora = '19:00';
+
+-- Ana: reserva en horario PASADO -> el scheduler la marcara FINALIZADA
+INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
+SELECT 1, 1, h.id, 2, 'CONFIRMADA', 'XPLR-PASADO01', CURRENT_TIMESTAMP
+FROM horarios_disponibles h
+WHERE h.actividad_id = 1 AND h.fecha = '2026-04-10' AND h.hora = '10:00';
+
+-- Maria (id=3): tambien con horario pasado
+INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
+SELECT 3, 2, h.id, 1, 'CONFIRMADA', 'XPLR-PASADO02', CURRENT_TIMESTAMP
+FROM horarios_disponibles h
+WHERE h.actividad_id = 2 AND h.fecha = '2026-04-15' AND h.hora = '19:00';
