@@ -164,3 +164,22 @@ INSERT INTO fotos_actividad (url, actividad_id) VALUES
     ('https://picsum.photos/seed/machu1/800/600', 5),
     ('https://picsum.photos/seed/machu2/800/600', 5),
     ('https://picsum.photos/seed/machu3/800/600', 5);
+
+-- =========================================
+-- USUARIOS DE PRUEBA (Bloque A)
+-- Password de todos: password123  (hasheada con BCrypt)
+-- =========================================
+INSERT INTO usuarios (email, password_hash, nombre, telefono, foto_url, creado_en) VALUES
+    ('ana@xplorenow.com',   '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Ana Garcia',     '+541112345678', NULL, CURRENT_TIMESTAMP),
+    ('juan@xplorenow.com',  '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Juan Perez',     '+541123456789', NULL, CURRENT_TIMESTAMP),
+    ('maria@xplorenow.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Maria Rodriguez', '+541134567890', NULL, CURRENT_TIMESTAMP),
+    ('pedro@xplorenow.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Pedro Lopez',    '+541145678901', NULL, CURRENT_TIMESTAMP),
+    ('lucia@xplorenow.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Lucia Martinez', '+541156789012', NULL, CURRENT_TIMESTAMP);
+
+-- Preferencias de viaje (ejemplos)
+-- Ana: aventura + naturaleza
+INSERT INTO usuario_preferencias (usuario_id, categoria_id) VALUES (1, 1), (1, 4);
+-- Juan: gastronomia + cultura
+INSERT INTO usuario_preferencias (usuario_id, categoria_id) VALUES (2, 3), (2, 2);
+-- Maria: relax
+INSERT INTO usuario_preferencias (usuario_id, categoria_id) VALUES (3, 5);
