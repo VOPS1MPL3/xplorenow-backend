@@ -1,5 +1,6 @@
 package com.xplorenow.reserva;
 
+import com.xplorenow.calificacion.CalificacionDTO;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -28,7 +29,18 @@ public class ReservaDTO {
     private Integer duracionMinutos;
     private String guiaAsignado;
 
+    /**
+     * Calificacion adjunta si la reserva esta FINALIZADA y el usuario
+     * ya califico. null si no califico todavia o no aplica.
+     * Cumple punto 13 del TPO: "la calificacion queda visible en el historial".
+     */
+    private CalificacionDTO calificacion;
+
     public static ReservaDTO desde(Reserva r) {
+        CalificacionDTO calif = r.getCalificacion() != null
+                ? CalificacionDTO.desde(r.getCalificacion())
+                : null;
+
         return ReservaDTO.builder()
                 .id(r.getId())
                 .voucherCodigo(r.getVoucherCodigo())
@@ -42,6 +54,7 @@ public class ReservaDTO {
                 .cantidadParticipantes(r.getCantidadParticipantes())
                 .duracionMinutos(r.getActividad().getDuracionMinutos())
                 .guiaAsignado(r.getActividad().getGuiaAsignado())
+                .calificacion(calif)
                 .build();
     }
 }

@@ -46,6 +46,13 @@ public class Reserva {
 
     private LocalDateTime canceladaEn;
 
+    /**
+     * Relacion inversa hacia Calificacion. Cada reserva FINALIZADA puede
+     * tener cero o una calificacion. Se carga lazy para no traerla siempre.
+     */
+    @OneToOne(mappedBy = "reserva", fetch = FetchType.LAZY)
+    private com.xplorenow.calificacion.Calificacion calificacion;
+
     @PrePersist
     void prePersist() {
         if (creadaEn == null) creadaEn = LocalDateTime.now();
