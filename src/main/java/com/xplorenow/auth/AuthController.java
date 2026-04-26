@@ -53,13 +53,18 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest req) {
+        System.out.println("==> LOGIN REQUEST: email=[" + req.getEmail() + "] password=[" + req.getPassword() + "]");
         Optional<Usuario> opt = usuarioRepository.findByEmail(req.getEmail());
+        System.out.println("==> Usuario encontrado: " + opt.isPresent());
         if (opt.isEmpty()) {
             return ResponseEntity.status(401).body(error("Credenciales invalidas"));
         }
 
         Usuario u = opt.get();
-        if (!passwordEncoder.matches(req.getPassword(), u.getPasswordHash())) {
+        boolean matches = passwordEncoder.matches(req.getPassword(), u.getPasswordHash());
+        System.out.println("==> Hash en BD: [" + u.getPasswordHash() + "]");
+        System.out.println("==> Password matches: " + matches);
+        if (!matches) {
             return ResponseEntity.status(401).body(error("Credenciales invalidas"));
         }
 

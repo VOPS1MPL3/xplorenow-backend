@@ -170,7 +170,7 @@ INSERT INTO fotos_actividad (url, actividad_id) VALUES
 -- Password de todos: password123  (hasheada con BCrypt)
 -- =========================================
 INSERT INTO usuarios (email, password_hash, nombre, telefono, foto_url, creado_en) VALUES
-    ('ana@xplorenow.com',   '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Ana Garcia',     '+541112345678', NULL, CURRENT_TIMESTAMP),
+    ('ana@xplorenow.com',   '$2a$10$VZsemoCC6/isNFPGfw4xbe2XWG2JTzt43vYSOLHr.ByA5DyDgHQkO', 'Ana Garcia',     '+541112345678', NULL, CURRENT_TIMESTAMP),
     ('juan@xplorenow.com',  '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Juan Perez',     '+541123456789', NULL, CURRENT_TIMESTAMP),
     ('maria@xplorenow.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Maria Rodriguez', '+541134567890', NULL, CURRENT_TIMESTAMP),
     ('pedro@xplorenow.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Pedro Lopez',    '+541145678901', NULL, CURRENT_TIMESTAMP),
