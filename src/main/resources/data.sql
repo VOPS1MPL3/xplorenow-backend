@@ -234,3 +234,43 @@ INSERT INTO calificaciones (reserva_id, rating_actividad, rating_guia, comentari
 SELECT r.id, 5, 4, 'Recorrido increible, el guia super amable y conocedor. Muy recomendable.', CURRENT_TIMESTAMP
 FROM reservas r
 WHERE r.voucher_codigo = 'XPLR-PASADO01';
+
+-- =========================================
+-- NOTICIAS / OFERTAS / DESTINOS DESTACADOS (Bloque E)
+-- Algunas redirigen a una actividad, otras son contenido editorial
+-- =========================================
+INSERT INTO noticias (titulo, descripcion_breve, descripcion_completa, imagen_url, actividad_relacionada_id, publicada_en) VALUES
+    ('Bariloche en oferta: 20% off en Trekking',
+     'Por tiempo limitado, descuento exclusivo en una de nuestras experiencias mas elegidas en la Patagonia.',
+     'Aprovecha esta promocion exclusiva del 20% off en el Trekking al Cerro Catedral. Vista panoramica del Nahuel Huapi, equipo de seguridad incluido y almuerzo. Validez: hasta el 30 de mayo de 2026.',
+     'https://picsum.photos/seed/news-bariloche/800/400',
+     3,
+     CURRENT_TIMESTAMP),
+
+    ('Nuevo destino: Cataratas del Iguazu',
+     'Sumamos un nuevo destino al catalogo: aventura, naturaleza y una de las maravillas del mundo.',
+     'Estamos felices de anunciar que en las proximas semanas incorporamos las Cataratas del Iguazu como nuevo destino. Excursiones, tours fotograficos y experiencias en la selva misionera. Suscribite para enterarte cuando esten disponibles.',
+     'https://picsum.photos/seed/news-iguazu/800/400',
+     NULL,
+     CURRENT_TIMESTAMP),
+
+    ('Free Tours en Buenos Aires: la mejor manera de conocer la ciudad',
+     'Descubri por que cada vez mas viajeros eligen los free tours para sus primeros dias en BA.',
+     'Los free tours son recorridos a pie con guia profesional donde el viajero paga lo que considera al final. En Buenos Aires tenemos opciones por San Telmo, Recoleta y el centro historico. Una experiencia autentica para conocer la ciudad como un local.',
+     'https://picsum.photos/seed/news-freetour/800/400',
+     1,
+     CURRENT_TIMESTAMP),
+
+    ('Mendoza vendimia 2026: experiencias gastronomicas exclusivas',
+     'En marzo y abril, Mendoza se viste de vendimia. Tours por bodegas con cata + maridaje.',
+     'Durante la temporada de vendimia, las bodegas mendocinas abren sus puertas con experiencias exclusivas: visitas guiadas, catas de vinos jovenes, comidas tipicas y participacion en la cosecha. Una de las experiencias mas autenticas de Argentina.',
+     'https://picsum.photos/seed/news-mendoza/800/400',
+     4,
+     CURRENT_TIMESTAMP),
+
+    ('Tip: como elegir tu primer free tour',
+     'Una pequena guia para los que estan por hacer su primer free tour. Que esperar, cuanto dejar de propina y mas.',
+     'Los free tours son una excelente manera de conocer una ciudad nueva. Algunos tips: 1) Llega 10 min antes, 2) llevate agua, 3) la propina sugerida ronda los 10-20 USD por persona segun la duracion, 4) preguntale al guia, son apasionados de su ciudad.',
+     'https://picsum.photos/seed/news-tip/800/400',
+     NULL,
+     CURRENT_TIMESTAMP);

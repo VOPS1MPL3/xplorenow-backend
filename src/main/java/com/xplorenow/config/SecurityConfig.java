@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .requestMatchers("/actividades/**").permitAll()
                 .requestMatchers("/destinos/**").permitAll()
                 .requestMatchers("/categorias/**").permitAll()
+                .requestMatchers("/noticias/**").permitAll()
                 // Cualquier otro endpoint: requiere JWT
                 .anyRequest().authenticated()
             )
