@@ -22,18 +22,15 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
             @Param("usuario") Usuario usuario,
             @Param("estado") EstadoReserva estado);
 
-    /**
-     * Historial: solo FINALIZADAS, con filtros opcionales por destino y rango de fechas.
-     */
     @Query("""
         SELECT r FROM Reserva r
         WHERE r.usuario = :usuario
           AND r.estado = com.xplorenow.reserva.EstadoReserva.FINALIZADA
           AND (:destinoId IS NULL OR r.actividad.destino.id = :destinoId)
-          AND (:fechaDesde IS NULL OR r.horario.fecha >= :fechaDesde)
-          AND (:fechaHasta IS NULL OR r.horario.fecha <= :fechaHasta)
+          AND (CAST(:fechaDesde AS LocalDate) IS NULL OR r.horario.fecha >= :fechaDesde)
+          AND (CAST(:fechaHasta AS LocalDate) IS NULL OR r.horario.fecha <= :fechaHasta)
         ORDER BY r.horario.fecha DESC
-        """)
+        """)  
     List<Reserva> historial(
             @Param("usuario") Usuario usuario,
             @Param("destinoId") Long destinoId,
