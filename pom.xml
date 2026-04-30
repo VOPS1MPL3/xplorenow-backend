@@ -76,6 +76,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- JavaMail - Envio de emails (OTP) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
         <!-- Lombok (opcional pero ahorra boilerplate) -->
         <dependency>
             <groupId>org.projectlombok</groupId>

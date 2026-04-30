@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
- * Genera, "envia" (mock por logs) y valida codigos OTP de 6 digitos.
+ * Genera, envia y valida codigos OTP de 6 digitos.
  * Cada codigo dura 5 minutos y se invalida al usarse.
  */
 @Service
@@ -22,10 +22,11 @@ public class OtpService {
     private static final SecureRandom RANDOM = new SecureRandom();
 
     private final OtpRepository otpRepository;
+    private final EmailService emailService;
 
     /**
-     * Genera un nuevo OTP de 6 digitos y lo guarda en BD.
-     * Loguea el codigo en consola simulando el envio por email.
+     * Genera un nuevo OTP de 6 digitos, lo guarda en BD
+     * y lo envia por email al usuario.
      */
     public String generarYEnviar(Usuario usuario) {
         String codigo = String.format("%06d", RANDOM.nextInt(1_000_000));
@@ -38,10 +39,7 @@ public class OtpService {
                 .build();
         otpRepository.save(otp);
 
-        log.info("===========================================");
-        log.info("[MOCK EMAIL] OTP para {}: {}", usuario.getEmail(), codigo);
-        log.info("Vence en {} minutos.", VIGENCIA_MINUTOS);
-        log.info("===========================================");
+        emailService.enviarOtp(usuario.getEmail(), codigo);
 
         return codigo;
     }
