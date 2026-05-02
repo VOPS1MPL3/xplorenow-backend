@@ -1,10 +1,14 @@
 package com.xplorenow.actividad;
 
+import com.xplorenow.categoria.Categoria;
+import com.xplorenow.usuario.Usuario;
+import com.xplorenow.usuario.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -16,7 +20,8 @@ import java.util.List;
  *
  *   GET /actividades                 -> Listado paginado con filtros
  *   GET /actividades/{id}            -> Detalle completo
- *   GET /actividades/destacadas      -> Recomendadas segun preferencias
+ *   GET /actividades/destacadas      -> Recomendadas segun preferencias del usuario logueado,
+ *                                       o todas si no hay sesion activa.
  */
 @RestController
 @RequestMapping("/actividades")
@@ -24,6 +29,7 @@ import java.util.List;
 public class ActividadController {
 
     private final ActividadRepository repository;
+    private final UsuarioRepository usuarioRepository;
 
     /**
      * Listado paginado con filtros combinados. Todos opcionales.
@@ -60,22 +66,44 @@ public class ActividadController {
     }
 
     /**
-     * Destacadas / recomendadas. Recibe preferencias del perfil.
-     * Si "categorias" llega vacio, devuelve todas ordenadas por cupos.
+     * Destacadas / recomendadas.
      *
-     * Ejemplo: GET /actividades/destacadas?categorias=AVENTURA,CULTURA
+     * - Si el usuario esta logueado Y tiene preferencias configuradas:
+     *   filtra por los codigos de sus categorias favoritas.
+     * - Si no esta logueado O no tiene preferencias: devuelve todas
+     *   ordenadas por cupos descendente (comportamiento anterior).
+     *
+     * El filtrado se hace aca en el backend — la app NO necesita
+     * pasar ?categorias=... manualmente.
+     *
+     * Ejemplo logueado: GET /actividades/destacadas
+     *   → Spring Security ya cargo el email en el SecurityContext via JwtAuthFilter
+     *   → leemos las preferencias del usuario y filtramos
+     *
+     * Ejemplo anonimo: GET /actividades/destacadas
+     *   → authentication == null → devuelve todas
      */
     @GetMapping("/destacadas")
     public ResponseEntity<List<ActividadDTO>> destacadas(
-            @RequestParam(required = false) List<String> categorias,
+            Authentication authentication,
             @RequestParam(defaultValue = "10") int size
     ) {
-        // Si la lista viene vacia la mando como null (matchea el IS NULL de la query)
-        List<String> filtro = (categorias == null || categorias.isEmpty())
-                ? null : categorias;
+        List<String> codigos = null;
+
+        // Solo intentamos leer preferencias si hay un usuario autenticado
+        if (authentication != null && authentication.isAuthenticated()) {
+            String email = authentication.getName();
+            codigos = usuarioRepository.findByEmail(email)
+                    .map(Usuario::getPreferencias)
+                    .filter(prefs -> !prefs.isEmpty())
+                    .map(prefs -> prefs.stream()
+                            .map(Categoria::getCodigo)
+                            .toList())
+                    .orElse(null);
+        }
 
         Pageable top = PageRequest.of(0, size);
-        List<Actividad> resultado = repository.buscarDestacadas(filtro, top);
+        List<Actividad> resultado = repository.buscarDestacadas(codigos, top);
 
         List<ActividadDTO> dtos = resultado.stream()
                 .map(ActividadDTO::desde)
