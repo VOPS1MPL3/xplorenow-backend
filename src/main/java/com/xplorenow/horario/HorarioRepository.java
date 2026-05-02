@@ -9,4 +9,6 @@ public interface HorarioRepository extends JpaRepository<Horario, Long> {
 
     /** Horarios de una actividad en una fecha, ordenados por hora ascendente */
     List<Horario> findByActividadIdAndFechaOrderByHoraAsc(Long actividadId, LocalDate fecha);
+    List<Horario> findByActividadIdAndCuposRestantesGreaterThanOrderByFechaAscHoraAsc(
+        Long actividadId, int cupos);
 }

@@ -31,6 +31,8 @@ public class ActividadDetalleDTO {
     private String idioma;
     private String politicaCancelacion;
     private List<String> galeriaUrls;
+    private String fechaDisponibleDesde;
+    private String fechaDisponibleHasta;
 
     public static ActividadDetalleDTO desde(Actividad a) {
         return ActividadDetalleDTO.builder()
@@ -53,6 +55,10 @@ public class ActividadDetalleDTO {
                 .galeriaUrls(a.getFotos().stream()
                         .map(f -> f.getUrl())
                         .toList())
+                .fechaDisponibleDesde(a.getFechaDisponibleDesde() != null 
+                    ? a.getFechaDisponibleDesde().toString() : null)
+                .fechaDisponibleHasta(a.getFechaDisponibleHasta() != null 
+                    ? a.getFechaDisponibleHasta().toString() : null)
                 .build();
     }
 }
