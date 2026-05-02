@@ -12,10 +12,12 @@ import java.util.Optional;
 /**
  * Endpoints de autenticacion (Punto 1 del TPO).
  *
- *   POST /auth/registro          -> Crear usuario nuevo
- *   POST /auth/login             -> Login clasico email + password (devuelve JWT)
- *   POST /auth/otp/solicitar     -> Pedir codigo OTP (loguea en consola)
- *   POST /auth/otp/confirmar     -> Confirmar codigo OTP (devuelve JWT)
+ *   POST /auth/registro              -> Crear usuario nuevo
+ *   POST /auth/login                 -> Login clasico email + password (devuelve JWT)
+ *   POST /auth/otp/solicitar         -> Pedir codigo OTP
+ *   POST /auth/otp/confirmar         -> Confirmar codigo OTP (devuelve JWT)
+ *   POST /auth/password/olvide       -> Solicitar codigo para resetear password
+ *   POST /auth/password/reset        -> Validar codigo y cambiar password
  */
 @RestController
 @RequestMapping("/auth")
@@ -53,18 +55,13 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest req) {
-        System.out.println("==> LOGIN REQUEST: email=[" + req.getEmail() + "] password=[" + req.getPassword() + "]");
         Optional<Usuario> opt = usuarioRepository.findByEmail(req.getEmail());
-        System.out.println("==> Usuario encontrado: " + opt.isPresent());
         if (opt.isEmpty()) {
             return ResponseEntity.status(401).body(error("Credenciales invalidas"));
         }
 
         Usuario u = opt.get();
-        boolean matches = passwordEncoder.matches(req.getPassword(), u.getPasswordHash());
-        System.out.println("==> Hash en BD: [" + u.getPasswordHash() + "]");
-        System.out.println("==> Password matches: " + matches);
-        if (!matches) {
+        if (!passwordEncoder.matches(req.getPassword(), u.getPasswordHash())) {
             return ResponseEntity.status(401).body(error("Credenciales invalidas"));
         }
 
@@ -76,8 +73,7 @@ public class AuthController {
     public ResponseEntity<?> solicitarOtp(@RequestBody SolicitarOtpRequest req) {
         Optional<Usuario> opt = usuarioRepository.findByEmail(req.getEmail());
         if (opt.isEmpty()) {
-            // Por seguridad respondemos OK aunque no exista,
-            // asi no revelamos que emails estan registrados
+            // Por seguridad respondemos OK aunque no exista
             return ResponseEntity.ok().build();
         }
         otpService.generarYEnviar(opt.get());
@@ -97,6 +93,52 @@ public class AuthController {
 
         String token = jwtService.generarToken(opt.get().getEmail());
         return ResponseEntity.ok(new LoginResponse(token));
+    }
+
+    // =========================================================
+    // Recupero de contraseña
+    // =========================================================
+
+    /**
+     * Paso 1: el usuario ingresa su email.
+     * Si existe, le mandamos un OTP por email.
+     * Siempre respondemos 200 para no revelar qué emails están registrados.
+     */
+    @PostMapping("/password/olvide")
+    public ResponseEntity<?> olvideClave(@RequestBody SolicitarOtpRequest req) {
+        Optional<Usuario> opt = usuarioRepository.findByEmail(req.getEmail());
+        opt.ifPresent(u -> otpService.generarYEnviar(u));
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Paso 2: el usuario ingresa el OTP + nueva contraseña.
+     * Si el OTP es válido, actualizamos el hash y respondemos 200.
+     * Si el OTP es inválido o expiró, respondemos 401.
+     */
+    @PostMapping("/password/reset")
+    public ResponseEntity<?> resetClave(@RequestBody ResetPasswordRequest req) {
+        if (req.getEmail() == null || req.getCodigo() == null
+                || req.getNuevaPassword() == null) {
+            return ResponseEntity.badRequest()
+                    .body(error("email, codigo y nuevaPassword son obligatorios"));
+        }
+
+        Optional<Usuario> opt = usuarioRepository.findByEmail(req.getEmail());
+        if (opt.isEmpty()) {
+            return ResponseEntity.status(401).body(error("Codigo invalido o expirado"));
+        }
+
+        Usuario u = opt.get();
+        if (!otpService.validar(u, req.getCodigo())) {
+            return ResponseEntity.status(401).body(error("Codigo invalido o expirado"));
+        }
+
+        // OTP válido → actualizamos la contraseña
+        u.setPasswordHash(passwordEncoder.encode(req.getNuevaPassword()));
+        usuarioRepository.save(u);
+
+        return ResponseEntity.ok().build();
     }
 
     private static java.util.Map<String, String> error(String msg) {
