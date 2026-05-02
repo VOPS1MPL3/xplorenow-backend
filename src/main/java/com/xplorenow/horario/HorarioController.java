@@ -32,4 +32,17 @@ public class HorarioController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+
+    @GetMapping("/{actividadId}/horarios/disponibles")
+        public ResponseEntity<List<HorarioDTO>> todosLosHorarios(
+        @PathVariable Long actividadId) {
+
+        List<HorarioDTO> dtos = repository
+            .findByActividadIdAndCuposRestantesGreaterThanOrderByFechaAscHoraAsc(
+                    actividadId, 0)
+            .stream()
+            .map(HorarioDTO::desde)
+            .toList();
+        return ResponseEntity.ok(dtos);
+    }
 }
