@@ -143,11 +143,12 @@ INSERT INTO fotos_actividad (url, actividad_id) VALUES
 -- Password de todos: password123  (hasheada con BCrypt)
 -- =========================================
 INSERT INTO usuarios (email, password_hash, nombre, telefono, foto_url, creado_en) VALUES
-    ('ana@xplorenow.com',   '$2a$10$VZsemoCC6/isNFPGfw4xbe2XWG2JTzt43vYSOLHr.ByA5DyDgHQkO', 'Ana Garcia',     '+541112345678', NULL, CURRENT_TIMESTAMP),
-    ('juan@xplorenow.com',  '$2a$10$VZsemoCC6/isNFPGfw4xbe2XWG2JTzt43vYSOLHr.ByA5DyDgHQkO', 'Juan Perez',     '+541123456789', NULL, CURRENT_TIMESTAMP),
-    ('maria@xplorenow.com', '$2a$10$VZsemoCC6/isNFPGfw4xbe2XWG2JTzt43vYSOLHr.ByA5DyDgHQkO', 'Maria Rodriguez', '+541134567890', NULL, CURRENT_TIMESTAMP),
-    ('pedro@xplorenow.com', '$2a$10$VZsemoCC6/isNFPGfw4xbe2XWG2JTzt43vYSOLHr.ByA5DyDgHQkO', 'Pedro Lopez',    '+541145678901', NULL, CURRENT_TIMESTAMP),
-    ('lucia@xplorenow.com', '$2a$10$VZsemoCC6/isNFPGfw4xbe2XWG2JTzt43vYSOLHr.ByA5DyDgHQkO', 'Lucia Martinez', '+541156789012', NULL, CURRENT_TIMESTAMP);
+    ('ana@xplorenow.com',   '$2a$10$VZsemoCC6/isNFPGfw4xbe2XWG2JTzt43vYSOLHr.ByA5DyDgHQkO', 'Ana Garcia',      '+541112345678', 'https://picsum.photos/seed/ana-garcia/200/200',      CURRENT_TIMESTAMP),
+    ('juan@xplorenow.com',  '$2a$10$VZsemoCC6/isNFPGfw4xbe2XWG2JTzt43vYSOLHr.ByA5DyDgHQkO', 'Juan Perez',      '+541123456789', 'https://picsum.photos/seed/juan-perez/200/200',      CURRENT_TIMESTAMP),
+    ('maria@xplorenow.com', '$2a$10$VZsemoCC6/isNFPGfw4xbe2XWG2JTzt43vYSOLHr.ByA5DyDgHQkO', 'Maria Rodriguez', '+541134567890', 'https://picsum.photos/seed/maria-rodriguez/200/200', CURRENT_TIMESTAMP),
+    ('pedro@xplorenow.com', '$2a$10$VZsemoCC6/isNFPGfw4xbe2XWG2JTzt43vYSOLHr.ByA5DyDgHQkO', 'Pedro Lopez',     '+541145678901', 'https://picsum.photos/seed/pedro-lopez/200/200',     CURRENT_TIMESTAMP),
+    ('lucia@xplorenow.com', '$2a$10$VZsemoCC6/isNFPGfw4xbe2XWG2JTzt43vYSOLHr.ByA5DyDgHQkO', 'Lucia Martinez',  '+541156789012', 'https://picsum.photos/seed/lucia-martinez/200/200',  CURRENT_TIMESTAMP),
+    ('sarachofran@gmail.com', '$2a$10$VZsemoCC6/isNFPGfw4xbe2XWG2JTzt43vYSOLHr.ByA5DyDgHQkO', 'Sara Chofran',  '+541167890123', 'https://picsum.photos/seed/sara-chofran/200/200',    CURRENT_TIMESTAMP);
 
 -- Preferencias de viaje
 INSERT INTO usuario_preferencias (usuario_id, categoria_id) VALUES (1, 1), (1, 4);
@@ -225,6 +226,20 @@ INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participant
 SELECT 3, 2, h.id, 1, 'FINALIZADA', 'XPLR-PASADO02', CURRENT_TIMESTAMP
 FROM horarios_disponibles h
 WHERE h.actividad_id = 2 AND h.fecha = '2026-04-15' AND h.hora = '19:00';
+
+
+-- Sara: reserva CONFIRMADA futura en Free Tour San Telmo (2026-06-01 10:00)
+-- usuario_id = 6 (sexto usuario insertado)
+INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
+SELECT 6, 1, h.id, 1, 'CONFIRMADA', 'XPLR-SARA0001', CURRENT_TIMESTAMP
+FROM horarios_disponibles h
+WHERE h.actividad_id = 1 AND h.fecha = '2026-06-01' AND h.hora = '10:00';
+
+-- Sara: reserva FINALIZADA para poder probar calificaciones
+INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
+SELECT 6, 1, h.id, 1, 'FINALIZADA', 'XPLR-SARA0002', CURRENT_TIMESTAMP
+FROM horarios_disponibles h
+WHERE h.actividad_id = 1 AND h.fecha = '2026-04-10' AND h.hora = '10:00';
 
 -- =========================================
 -- CALIFICACIONES (Bloque D)
