@@ -2,6 +2,7 @@ package com.xplorenow.reserva;
 
 import com.xplorenow.horario.Horario;
 import com.xplorenow.horario.HorarioRepository;
+import com.xplorenow.notificacion.NovedadService;
 import com.xplorenow.usuario.Usuario;
 import com.xplorenow.usuario.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,7 +21,8 @@ import java.util.UUID;
 /**
  * Toda la logica de negocio de reservas:
  *  - Crear reserva validando cupos en tiempo real
- *  - Cancelar reserva devolviendo cupos al horario
+ *  - Cancelar reserva devolviendo cupos al horario (por el viajero o por
+ *    la operadora, Punto 12 del TPO)
  *  - Job programado que marca FINALIZADAS las reservas con horario pasado
  */
 @Service
@@ -31,6 +33,7 @@ public class ReservaService {
     private final ReservaRepository reservaRepository;
     private final HorarioRepository horarioRepository;
     private final UsuarioRepository usuarioRepository;
+    private final NovedadService novedadService;
 
     /**
      * Crea una reserva atomicamente:
@@ -101,6 +104,33 @@ public class ReservaService {
         reserva.setEstado(EstadoReserva.CANCELADA);
         reserva.setCanceladaEn(LocalDateTime.now());
         return reservaRepository.save(reserva);
+    }
+
+    /**
+     * Punto 12 del TPO: cancelacion disparada por la operadora (ver
+     * OperadorController). A diferencia de cancelar(), no valida dueño
+     * (simulamos una accion de backoffice) y genera una Novedad para
+     * avisarle al viajero.
+     */
+    @Transactional
+    public Reserva cancelarPorOperador(Long reservaId) {
+        Reserva reserva = reservaRepository.findById(reservaId)
+                .orElseThrow(() -> new EntityNotFoundException("Reserva no encontrada"));
+
+        if (reserva.getEstado() != EstadoReserva.CONFIRMADA) {
+            throw new IllegalStateException("Solo se pueden cancelar reservas CONFIRMADAS");
+        }
+
+        Horario h = reserva.getHorario();
+        h.setCuposRestantes(h.getCuposRestantes() + reserva.getCantidadParticipantes());
+        horarioRepository.save(h);
+
+        reserva.setEstado(EstadoReserva.CANCELADA);
+        reserva.setCanceladaEn(LocalDateTime.now());
+        Reserva guardada = reservaRepository.save(reserva);
+
+        novedadService.registrarCancelacion(guardada);
+        return guardada;
     }
 
     /**
