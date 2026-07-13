@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
@@ -51,4 +50,24 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     List<Reserva> reservasParaFinalizar(
             @Param("hoy") LocalDate hoy,
             @Param("ahora") java.time.LocalTime ahora);
+
+    /**
+     * Punto 12: reservas CONFIRMADAS de un horario puntual, para notificar
+     * a todos los afectados cuando la operadora lo reprograma.
+     */
+    List<Reserva> findByHorarioIdAndEstado(Long horarioId, EstadoReserva estado);
+
+    /**
+     * Punto 12: candidatas al recordatorio de 24hs. Filtro grueso por fecha
+     * (el filtro fino de fecha+hora exacto se hace en NovedadService).
+     */
+    @Query("""
+        SELECT r FROM Reserva r
+        WHERE r.estado = com.xplorenow.reserva.EstadoReserva.CONFIRMADA
+          AND r.recordatorio24hEnviado = false
+          AND r.horario.fecha BETWEEN :hoy AND :maniana
+        """)
+    List<Reserva> candidatasParaRecordatorio(
+            @Param("hoy") LocalDate hoy,
+            @Param("maniana") LocalDate maniana);
 }

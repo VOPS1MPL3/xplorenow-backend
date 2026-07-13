@@ -47,6 +47,16 @@ public class Reserva {
     private LocalDateTime canceladaEn;
 
     /**
+     * Punto 12 del TPO: evita que el job de recordatorio 24hs genere la
+     * misma Novedad mas de una vez para la misma reserva.
+     * columnDefinition con default: el data.sql (seed) inserta reservas sin
+     * esta columna, y con ddl-auto=create-drop + continue-on-error=false
+     * necesitamos que la BD la complete sola con "false".
+     */
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean recordatorio24hEnviado;
+
+    /**
      * Relacion inversa hacia Calificacion. Cada reserva FINALIZADA puede
      * tener cero o una calificacion. Se carga lazy para no traerla siempre.
      */
@@ -57,5 +67,6 @@ public class Reserva {
     void prePersist() {
         if (creadaEn == null) creadaEn = LocalDateTime.now();
         if (estado == null) estado = EstadoReserva.CONFIRMADA;
+        if (recordatorio24hEnviado == null) recordatorio24hEnviado = false;
     }
 }
