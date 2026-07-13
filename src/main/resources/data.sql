@@ -1,6 +1,8 @@
 -- =========================================
 -- SEED DE DATOS - XploreNow
 -- Carga base con las 4 entidades de catalogo + Bloques A, B y D
+-- Fechas coherentes desde el 13 de julio de 2026 (hoy)
+-- Horarios disponibles: 14 al 28 de julio de 2026
 -- =========================================
 
 -- =========================================
@@ -87,7 +89,7 @@ INSERT INTO actividades (
      'Ana Rodriguez', 'Espanol/Ingles', 'Cancelacion gratuita hasta 24hs antes.'),
 
     ('Day Spa en Las Lenas', 'https://picsum.photos/seed/spa/600/400',
-     3, 5, 300, 45000.00, 6, '2026-06-01', '2026-09-30',
+     3, 5, 300, 45000.00, 6, '2026-06-01', '2026-12-31',
      'Dia completo de spa con masajes, sauna, piscina climatizada y vista a la montana.',
      'Acceso completo al spa, almuerzo, una sesion de masaje.',
      'Hotel Piscis, Las Lenas', -35.1481, -70.0830,
@@ -108,7 +110,7 @@ INSERT INTO actividades (
      'Diego Lopez', 'Espanol/Ingles', 'Cancelacion gratuita.'),
 
     ('Cabalgata en los Andes', 'https://picsum.photos/seed/cabalgata/600/400',
-     3, 1, 360, 35000.00, 10, '2026-09-01', '2026-04-30',
+     3, 1, 360, 35000.00, 10, '2026-01-01', '2026-12-31',
      'Cabalgata por la cordillera con guia gaucho. Asado al regreso.',
      'Caballo, equipamiento, asado completo, vino.',
      'Estancia La Alejandra', -33.0381, -68.8786,
@@ -157,89 +159,98 @@ INSERT INTO usuario_preferencias (usuario_id, categoria_id) VALUES (3, 5);
 
 -- =========================================
 -- HORARIOS DISPONIBLES (Bloque B)
+-- Todos entre el 14 y el 28 de julio de 2026 (a partir de manana)
 -- =========================================
 INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
-    (1, '2026-05-15', '10:00', 25),
-    (1, '2026-05-15', '15:00', 25),
-    (1, '2026-05-16', '10:00', 25),
-    (1, '2026-05-16', '15:00', 25),
-    (1, '2026-06-01', '10:00', 25),
-    (1, '2026-06-01', '15:00', 25);
+    (1, '2026-07-14', '10:00', 25),
+    (1, '2026-07-14', '15:00', 25),
+    (1, '2026-07-15', '10:00', 25),
+    (1, '2026-07-18', '10:00', 25),
+    (1, '2026-07-22', '10:00', 25),
+    (1, '2026-07-22', '15:00', 25);
 
 INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
-    (2, '2026-05-15', '19:00', 12),
-    (2, '2026-05-20', '19:00', 12),
-    (2, '2026-06-01', '19:00', 12);
+    (2, '2026-07-15', '19:00', 12),
+    (2, '2026-07-19', '19:00', 12),
+    (2, '2026-07-24', '19:00', 12);
 
 INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
-    (3, '2026-05-20', '08:00', 8),
-    (3, '2026-05-25', '08:00', 8),
-    (3, '2026-06-10', '08:00', 8);
+    (3, '2026-07-17', '08:00', 8),
+    (3, '2026-07-21', '08:00', 8),
+    (3, '2026-07-28', '08:00', 8);
 
 INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
-    (4, '2026-05-15', '11:00', 20),
-    (4, '2026-05-15', '15:00', 20),
-    (4, '2026-05-22', '11:00', 20);
+    (4, '2026-07-16', '11:00', 20),
+    (4, '2026-07-16', '15:00', 20),
+    (4, '2026-07-23', '11:00', 20);
 
 INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
-    (5, '2026-05-18', '05:00', 30),
-    (5, '2026-06-05', '05:00', 30);
+    (5, '2026-07-18', '05:00', 30),
+    (5, '2026-07-25', '05:00', 30);
 
 INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
-    (6, '2026-05-15', '09:00', 25),
-    (6, '2026-05-15', '14:00', 25);
+    (6, '2026-07-14', '09:00', 25),
+    (6, '2026-07-14', '14:00', 25);
 
 INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
-    (7, '2026-05-15', '20:00', 15),
-    (7, '2026-05-22', '20:00', 15);
+    (7, '2026-07-16', '20:00', 15),
+    (7, '2026-07-23', '20:00', 15);
 
--- Horarios pasados para probar FINALIZADA + calificaciones
+-- Horarios recientes (ya pasados) para probar FINALIZADA + calificaciones
+-- Dentro de la ventana de 48hs desde hoy (13 de julio de 2026)
 INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
-    (1, '2026-04-10', '10:00', 23),
-    (2, '2026-04-15', '19:00', 11);
+    (1, '2026-07-12', '10:00', 23),
+    (2, '2026-07-11', '19:00', 11),
+    (7, '2026-07-12', '14:00', 15);
 
 -- =========================================
 -- RESERVAS (Bloque B)
 -- Usamos INSERT ... SELECT para no depender de IDs autoasignados
 -- =========================================
 
--- Ana: reserva CONFIRMADA futura en Free Tour San Telmo (2026-05-15 10:00)
+-- Ana: reserva CONFIRMADA futura en Free Tour San Telmo (2026-07-14 10:00)
 INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
 SELECT 1, 1, h.id, 2, 'CONFIRMADA', 'XPLR-A1B2C3D4', CURRENT_TIMESTAMP
 FROM horarios_disponibles h
-WHERE h.actividad_id = 1 AND h.fecha = '2026-05-15' AND h.hora = '10:00';
+WHERE h.actividad_id = 1 AND h.fecha = '2026-07-14' AND h.hora = '10:00';
 
--- Juan: reserva CANCELADA en Tour Gastronomico (2026-05-20 19:00)
+-- Juan: reserva CANCELADA en Tour Gastronomico (2026-07-19 19:00)
 INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en, cancelada_en)
 SELECT 2, 2, h.id, 4, 'CANCELADA', 'XPLR-E5F6G7H8', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM horarios_disponibles h
-WHERE h.actividad_id = 2 AND h.fecha = '2026-05-20' AND h.hora = '19:00';
+WHERE h.actividad_id = 2 AND h.fecha = '2026-07-19' AND h.hora = '19:00';
 
--- Ana: reserva FINALIZADA (horario pasado, ya marcada para que pueda calificar)
+-- Ana: reserva FINALIZADA (horario reciente, ya marcada para que pueda calificar)
 INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
 SELECT 1, 1, h.id, 2, 'FINALIZADA', 'XPLR-PASADO01', CURRENT_TIMESTAMP
 FROM horarios_disponibles h
-WHERE h.actividad_id = 1 AND h.fecha = '2026-04-10' AND h.hora = '10:00';
+WHERE h.actividad_id = 1 AND h.fecha = '2026-07-12' AND h.hora = '10:00';
 
 -- Maria: tambien FINALIZADA, sin calificar todavia
 INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
 SELECT 3, 2, h.id, 1, 'FINALIZADA', 'XPLR-PASADO02', CURRENT_TIMESTAMP
 FROM horarios_disponibles h
-WHERE h.actividad_id = 2 AND h.fecha = '2026-04-15' AND h.hora = '19:00';
+WHERE h.actividad_id = 2 AND h.fecha = '2026-07-11' AND h.hora = '19:00';
 
-
--- Sara: reserva CONFIRMADA futura en Free Tour San Telmo (2026-06-01 10:00)
+-- Sara: reserva CONFIRMADA futura en Free Tour San Telmo (2026-07-22 10:00)
 -- usuario_id = 6 (sexto usuario insertado)
+-- Esta es la reserva ideal para demostrar el voucher con QR y el check-in
 INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
 SELECT 6, 1, h.id, 1, 'CONFIRMADA', 'XPLR-SARA0001', CURRENT_TIMESTAMP
 FROM horarios_disponibles h
-WHERE h.actividad_id = 1 AND h.fecha = '2026-06-01' AND h.hora = '10:00';
+WHERE h.actividad_id = 1 AND h.fecha = '2026-07-22' AND h.hora = '10:00';
 
--- Sara: reserva FINALIZADA para poder probar calificaciones
+-- Sara: reserva FINALIZADA para poder probar calificaciones (dentro de 48hs)
 INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
 SELECT 6, 1, h.id, 1, 'FINALIZADA', 'XPLR-SARA0002', CURRENT_TIMESTAMP
 FROM horarios_disponibles h
-WHERE h.actividad_id = 1 AND h.fecha = '2026-04-10' AND h.hora = '10:00';
+WHERE h.actividad_id = 1 AND h.fecha = '2026-07-12' AND h.hora = '10:00';
+
+-- Sara: segunda reserva FINALIZADA para calificar (otra actividad)
+INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
+SELECT 6, 7, h.id, 1, 'FINALIZADA', 'XPLR-SARA-CAL2', CURRENT_TIMESTAMP
+FROM horarios_disponibles h
+WHERE h.actividad_id = 7 AND h.fecha = '2026-07-12' AND h.hora = '14:00';
 
 -- =========================================
 -- CALIFICACIONES (Bloque D)
@@ -257,7 +268,7 @@ WHERE r.voucher_codigo = 'XPLR-PASADO01';
 INSERT INTO noticias (titulo, descripcion_breve, descripcion_completa, imagen_url, actividad_relacionada_id, publicada_en) VALUES
     ('Bariloche en oferta: 20% off en Trekking',
      'Por tiempo limitado, descuento exclusivo en una de nuestras experiencias mas elegidas en la Patagonia.',
-     'Aprovecha esta promocion exclusiva del 20% off en el Trekking al Cerro Catedral. Vista panoramica del Nahuel Huapi, equipo de seguridad incluido y almuerzo. Validez: hasta el 30 de mayo de 2026.',
+     'Aprovecha esta promocion exclusiva del 20% off en el Trekking al Cerro Catedral. Vista panoramica del Nahuel Huapi, equipo de seguridad incluido y almuerzo. Validez limitada.',
      'https://picsum.photos/seed/news-bariloche/800/400',
      3,
      CURRENT_TIMESTAMP),
@@ -276,9 +287,9 @@ INSERT INTO noticias (titulo, descripcion_breve, descripcion_completa, imagen_ur
      1,
      CURRENT_TIMESTAMP),
 
-    ('Mendoza vendimia 2026: experiencias gastronomicas exclusivas',
-     'En marzo y abril, Mendoza se viste de vendimia. Tours por bodegas con cata + maridaje.',
-     'Durante la temporada de vendimia, las bodegas mendocinas abren sus puertas con experiencias exclusivas: visitas guiadas, catas de vinos jovenes, comidas tipicas y participacion en la cosecha. Una de las experiencias mas autenticas de Argentina.',
+    ('Mendoza: experiencias gastronomicas exclusivas',
+     'Tours por bodegas con cata + maridaje, una experiencia autentica de Argentina.',
+     'Las bodegas mendocinas abren sus puertas con experiencias exclusivas: visitas guiadas, catas de vinos, comidas tipicas y mas. Una de las experiencias mas autenticas de Argentina.',
      'https://picsum.photos/seed/news-mendoza/800/400',
      4,
      CURRENT_TIMESTAMP),
@@ -289,22 +300,3 @@ INSERT INTO noticias (titulo, descripcion_breve, descripcion_completa, imagen_ur
      'https://picsum.photos/seed/news-tip/800/400',
      NULL,
      CURRENT_TIMESTAMP);
-
--- =========================================
--- HORARIOS Y RESERVAS PARA CALIFICAR (Sara)
--- Actividades del 2026-07-12: dentro de la ventana de 48hs para calificar
--- =========================================
-
-INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
-    (1, '2026-07-12', '10:00', 25),
-    (7, '2026-07-12', '14:00', 15);
-
-INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
-SELECT 6, 1, h.id, 1, 'FINALIZADA', 'XPLR-SARA-CAL1', CURRENT_TIMESTAMP
-FROM horarios_disponibles h
-WHERE h.actividad_id = 1 AND h.fecha = '2026-07-12' AND h.hora = '10:00';
-
-INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
-SELECT 6, 7, h.id, 1, 'FINALIZADA', 'XPLR-SARA-CAL2', CURRENT_TIMESTAMP
-FROM horarios_disponibles h
-WHERE h.actividad_id = 7 AND h.fecha = '2026-07-12' AND h.hora = '14:00';
