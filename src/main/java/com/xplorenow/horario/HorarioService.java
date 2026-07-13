@@ -42,7 +42,7 @@ public class HorarioService {
                 .findByHorarioIdAndEstado(horarioId, EstadoReserva.CONFIRMADA);
 
         for (Reserva r : afectadas) {
-            novedadService.registrarReprogramacion(r, fechaAnterior, horaAnterior);
+            novedadService.registrarReprogramacion(r, fechaAnterior, horaAnterior, nuevaFecha, nuevaHora);
         }
 
         return guardado;

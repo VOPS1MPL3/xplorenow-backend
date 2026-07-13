@@ -42,14 +42,15 @@ public class NovedadService {
     }
 
     @Transactional
-    public void registrarReprogramacion(Reserva reserva, LocalDate fechaAnterior, LocalTime horaAnterior) {
+    public void registrarReprogramacion(Reserva reserva, LocalDate fechaAnterior, LocalTime horaAnterior,
+                                        LocalDate fechaNueva, LocalTime horaNueva) {
         Novedad n = Novedad.builder()
                 .usuario(reserva.getUsuario())
                 .reserva(reserva)
                 .tipo(TipoNovedad.REPROGRAMACION)
                 .mensaje("Tu actividad \"" + reserva.getActividad().getNombre()
                         + "\" fue reprogramada. Antes: " + fechaAnterior + " " + horaAnterior
-                        + " -> Ahora: " + reserva.getHorario().getFecha() + " " + reserva.getHorario().getHora())
+                        + " -> Ahora: " + fechaNueva + " " + horaNueva)
                 .build();
         novedadRepository.save(n);
         log.info("[Novedad] REPROGRAMACION generada para reserva {}", reserva.getId());
