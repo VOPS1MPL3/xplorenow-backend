@@ -289,3 +289,22 @@ INSERT INTO noticias (titulo, descripcion_breve, descripcion_completa, imagen_ur
      'https://picsum.photos/seed/news-tip/800/400',
      NULL,
      CURRENT_TIMESTAMP);
+
+-- =========================================
+-- HORARIOS Y RESERVAS PARA CALIFICAR (Sara)
+-- Actividades del 2026-07-12: dentro de la ventana de 48hs para calificar
+-- =========================================
+
+INSERT INTO horarios_disponibles (actividad_id, fecha, hora, cupos_restantes) VALUES
+    (1, '2026-07-12', '10:00', 25),
+    (7, '2026-07-12', '14:00', 15);
+
+INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
+SELECT 6, 1, h.id, 1, 'FINALIZADA', 'XPLR-SARA-CAL1', CURRENT_TIMESTAMP
+FROM horarios_disponibles h
+WHERE h.actividad_id = 1 AND h.fecha = '2026-07-12' AND h.hora = '10:00';
+
+INSERT INTO reservas (usuario_id, actividad_id, horario_id, cantidad_participantes, estado, voucher_codigo, creada_en)
+SELECT 6, 7, h.id, 1, 'FINALIZADA', 'XPLR-SARA-CAL2', CURRENT_TIMESTAMP
+FROM horarios_disponibles h
+WHERE h.actividad_id = 7 AND h.fecha = '2026-07-12' AND h.hora = '14:00';

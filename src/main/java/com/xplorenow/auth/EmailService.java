@@ -41,7 +41,7 @@ public class EmailService {
             mailSender.send(message);
             log.info("[EMAIL] OTP enviado correctamente a {}", destinatario);
 
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             // Fallback: si el mail falla, seguimos logueando el codigo para no romper el flujo
             log.error("[EMAIL ERROR] No se pudo enviar OTP a {}: {}", destinatario, e.getMessage());
             log.info("==========================================");
