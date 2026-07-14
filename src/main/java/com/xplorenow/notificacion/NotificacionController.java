@@ -34,6 +34,7 @@ public class NotificacionController {
 
     private final NovedadRepository novedadRepository;
     private final UsuarioRepository usuarioRepository;
+    private final NovedadService novedadService;
 
     /** Cuanto tiempo sostiene la conexion como maximo antes de responder vacio (204). */
     private static final long TIMEOUT_MS = 25_000;
@@ -63,6 +64,7 @@ public class NotificacionController {
 
             if (!novedades.isEmpty()) {
                 List<NovedadDTO> dtos = novedades.stream().map(NovedadDTO::desde).toList();
+                novedadService.marcarLeidas(novedades);
                 return ResponseEntity.ok(dtos);
             }
 
@@ -76,5 +78,29 @@ public class NotificacionController {
 
         // Timeout sin novedades: el cliente debe volver a pedir enseguida
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Novedades generadas mientras la app estaba cerrada. El long polling
+     * solo entrega lo que pasa a partir del momento de conexion, asi que el
+     * cliente llama a esto una vez al arrancar la sesion para no perderse
+     * nada (tipicamente el recordatorio de 24hs, que lo genera un job).
+     *
+     *   GET /notificaciones/pendientes
+     */
+    @GetMapping("/pendientes")
+    public ResponseEntity<?> pendientes(Authentication auth) {
+        Usuario usuario;
+        try {
+            usuario = usuarioRepository.findByEmail(auth.getName())
+                    .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(404).body(Map.of("error", e.getMessage()));
+        }
+
+        List<NovedadDTO> dtos = novedadService.obtenerPendientesYMarcarLeidas(usuario)
+                .stream().map(NovedadDTO::desde).toList();
+
+        return ResponseEntity.ok(dtos);
     }
 }

@@ -42,6 +42,15 @@ public class Novedad {
     @Column(nullable = false)
     private LocalDateTime fecha;
 
+    /**
+     * Indica si el cliente ya recibio esta novedad. Las novedades generadas
+     * mientras la app estaba cerrada quedan en false y se entregan al
+     * arrancar la sesion via /notificaciones/pendientes.
+     */
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean leida = false;
+
     @PrePersist
     void prePersist() {
         if (fecha == null) fecha = LocalDateTime.now();
