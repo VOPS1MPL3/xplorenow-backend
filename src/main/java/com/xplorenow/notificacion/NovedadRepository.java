@@ -14,4 +14,11 @@ public interface NovedadRepository extends JpaRepository<Novedad, Long> {
      * el ultimo chequeo del cliente.
      */
     List<Novedad> findByUsuarioAndFechaAfterOrderByFechaAsc(Usuario usuario, LocalDateTime fecha);
+
+    /**
+     * Novedades del usuario que todavia no fueron entregadas al cliente.
+     * Se usan al arrancar la sesion: la app pudo haber estado cerrada cuando
+     * el job de recordatorios genero la novedad.
+     */
+    List<Novedad> findByUsuarioAndLeidaFalseOrderByFechaAsc(Usuario usuario);
 }

@@ -2,6 +2,8 @@ package com.xplorenow.notificacion;
 
 import com.xplorenow.reserva.Reserva;
 import com.xplorenow.reserva.ReservaRepository;
+import com.xplorenow.usuario.Usuario;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -40,6 +42,18 @@ public class NovedadService {
         novedadRepository.save(n);
         log.info("[Novedad] CANCELACION generada para reserva {}", reserva.getId());
     }
+    
+    /**
+     * Marca como leidas las novedades ya entregadas por el long polling,
+     * para que no se repitan al reabrir la app.
+     */
+    @Transactional
+    public void marcarLeidas(List<Novedad> novedades) {
+        for (Novedad n : novedades) {
+            n.setLeida(true);
+        }
+        novedadRepository.saveAll(novedades);
+    }
 
     @Transactional
     public void registrarReprogramacion(Reserva reserva, LocalDate fechaAnterior, LocalTime horaAnterior,
@@ -54,6 +68,23 @@ public class NovedadService {
                 .build();
         novedadRepository.save(n);
         log.info("[Novedad] REPROGRAMACION generada para reserva {}", reserva.getId());
+    }
+
+    /**
+     * Devuelve las novedades que el usuario todavia no recibio y las marca
+     * como leidas. Se llama una sola vez al arrancar la sesion: el long
+     * polling solo ve novedades posteriores al momento de conexion, asi que
+     * sin esto se perderian las generadas con la app cerrada (tipicamente el
+     * recordatorio de 24hs, que lo dispara un job programado).
+     */
+    @Transactional
+    public List<Novedad> obtenerPendientesYMarcarLeidas(Usuario usuario) {
+        List<Novedad> pendientes = novedadRepository.findByUsuarioAndLeidaFalseOrderByFechaAsc(usuario);
+        for (Novedad n : pendientes) {
+            n.setLeida(true);
+        }
+        novedadRepository.saveAll(pendientes);
+        return pendientes;
     }
 
     /**
